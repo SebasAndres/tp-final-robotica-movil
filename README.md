@@ -4,7 +4,7 @@ Localización y seguimiento de trayectorias de un robot omnidireccional Mecanum 
 
 ## Documentación
 
-- [Informe](docs/informe.md)
+- Informe — [HTML](https://sebasandres.github.io/tp-final-robotica-movil/informe.html) | [PDF](docs/informe.pdf)
 - [Enunciado](Enunciado.pdf)
 - [Paper — Taheri et al. (2015)](Paper.pdf)
 
