@@ -140,26 +140,20 @@ La pose $^O\mathbf{p}_k$ se publica como la transformación `odom → base_link`
 > Se movió el robot en trayectorias simples conocidas (traslación pura en X, traslación pura en Y, rotación en el lugar) y se comparó la pose estimada por odometría (`odom → base_link`) contra el ground truth provisto por CoppeliaSim (`odom → base_link_gt`). Como se observa en los videos, la odometría acumula error con la distancia recorrida debido a la integración de Euler y a imperfecciones del modelo.
 
 <figure>
-  <video class="video-demo" controls width="640">
-    <source src="assets/movimiento_en_X_sin_EKF_base_link_baselink_gt.mp4" type="video/mp4">
-  </video>
-  <p class="video-fallback">Video: Movimiento en X sin EKF — <a href="https://github.com/SebasAndres/Robotica-Movil-UBA/blob/main/tp_final/docs/assets/movimiento_en_X_sin_EKF_base_link_baselink_gt.mp4">ver en repositorio</a></p>
+  <iframe class="video-demo" src="https://drive.google.com/file/d/1zihTPNzXgV-jO1oe3W9y3CFOTLDDNq9y/preview" width="640" height="360" allow="autoplay"></iframe>
+  <p class="video-fallback">Video: Movimiento en X sin EKF — <a href="https://drive.google.com/file/d/1zihTPNzXgV-jO1oe3W9y3CFOTLDDNq9y/view?usp=sharing">ver en Google Drive</a></p>
   <figcaption>Traslación pura en X: odometría (<code>base_link</code>) vs. ground truth (<code>base_link_gt</code>).</figcaption>
 </figure>
 
 <figure>
-  <video class="video-demo" controls width="640">
-    <source src="assets/movimiento_en_Y_sin_EKF_base_link_base_link_gt.mp4" type="video/mp4">
-  </video>
-  <p class="video-fallback">Video: Movimiento en Y sin EKF — <a href="https://github.com/SebasAndres/Robotica-Movil-UBA/blob/main/tp_final/docs/assets/movimiento_en_Y_sin_EKF_base_link_base_link_gt.mp4">ver en repositorio</a></p>
+  <iframe class="video-demo" src="https://drive.google.com/file/d/1VhgZSVhULc5Tdv54so55UMRfWXCDRimh/preview" width="640" height="360" allow="autoplay"></iframe>
+  <p class="video-fallback">Video: Movimiento en Y sin EKF — <a href="https://drive.google.com/file/d/1VhgZSVhULc5Tdv54so55UMRfWXCDRimh/view?usp=sharing">ver en Google Drive</a></p>
   <figcaption>Traslación pura en Y: odometría (<code>base_link</code>) vs. ground truth (<code>base_link_gt</code>).</figcaption>
 </figure>
 
 <figure>
-  <video class="video-demo" controls width="640">
-    <source src="assets/movimiento_angular_Z_sin_EKF_base_link_baselinkgt.mp4" type="video/mp4">
-  </video>
-  <p class="video-fallback">Video: Rotación en Z sin EKF — <a href="https://github.com/SebasAndres/Robotica-Movil-UBA/blob/main/tp_final/docs/assets/movimiento_angular_Z_sin_EKF_base_link_baselinkgt.mp4">ver en repositorio</a></p>
+  <iframe class="video-demo" src="https://drive.google.com/file/d/15kUvZ78t_TzNmAoFXn7Wk8LJ9NnTNi_G/preview" width="640" height="360" allow="autoplay"></iframe>
+  <p class="video-fallback">Video: Rotación en Z sin EKF — <a href="https://drive.google.com/file/d/15kUvZ78t_TzNmAoFXn7Wk8LJ9NnTNi_G/view?usp=sharing">ver en Google Drive</a></p>
   <figcaption>Rotación pura en Z: odometría (<code>base_link</code>) vs. ground truth (<code>base_link_gt</code>).</figcaption>
 </figure>
 

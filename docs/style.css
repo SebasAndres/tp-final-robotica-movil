@@ -144,6 +144,6 @@ img {
   button, nav { display: none; }
 
   /* videos: hide player, show link reference */
-  video { display: none; }
+  iframe.video-demo { display: none; }
   .video-fallback { display: block !important; }
 }
