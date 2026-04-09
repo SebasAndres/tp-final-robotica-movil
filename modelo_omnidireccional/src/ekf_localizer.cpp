@@ -7,7 +7,9 @@ using namespace robmovil;
 EKFLocalizer::EKFLocalizer()
 : Node("ekf_localizer"),
   mu_(Eigen::Vector3d::Zero()),
-  odom_initialized_(false)
+  odom_initialized_(false),
+  tf_buffer_(this->get_clock()),
+  tf_listener_(tf_buffer_)
 {
     // Covarianza inicial: poca incertidumbre en la pose de partida
     sigma_ = Eigen::Matrix3d::Identity() * 0.01;
@@ -66,6 +68,22 @@ void EKFLocalizer::on_odometry(const nav_msgs::msg::Odometry::SharedPtr msg)
     rclcpp::Time now(msg->header.stamp);
 
     if (!odom_initialized_) {
+        // Inicializar mu_ desde map→odom para que el EKF arranque en la
+        // posición real del robot en el frame map, no en el origen.
+        try {
+            auto tf = tf_buffer_.lookupTransform("map", "odom", tf2::TimePointZero);
+            auto &t = tf.transform.translation;
+            auto &r = tf.transform.rotation;
+            double siny = 2.0 * (r.w * r.z + r.x * r.y);
+            double cosy = 1.0 - 2.0 * (r.y * r.y + r.z * r.z);
+            mu_ << t.x, t.y, std::atan2(siny, cosy);
+            RCLCPP_INFO(this->get_logger(),
+                "EKF initialized from map→odom: x=%.3f y=%.3f theta=%.3f",
+                mu_(0), mu_(1), mu_(2));
+        } catch (const tf2::TransformException &) {
+            RCLCPP_WARN(this->get_logger(),
+                "map→odom not available yet, initializing at origin");
+        }
         last_odom_time_  = now;
         odom_initialized_ = true;
         return;

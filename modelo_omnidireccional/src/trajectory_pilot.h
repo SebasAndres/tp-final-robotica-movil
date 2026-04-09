@@ -10,7 +10,7 @@
 #include "trajectory_generator.h"
 
 // Set to 1 to use EKF pose (map->base_link_ekf), 0 for odometry (map->base_link)
-#define USE_EKF 0
+#define USE_EKF 1
 
 namespace robmovil {
 
