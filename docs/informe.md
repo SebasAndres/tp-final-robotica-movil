@@ -104,7 +104,9 @@ v_y \\
 Podemos utilizar el desplazamiento de las ruedas medido por los encoders para estimar la pose de la plataforma en el frame `odom`.
 
 > **Notación:** 
+>
 > - Nombraremos al marco `map` (coordenadas de la simulación) como M, `odom` (desplazamiento desde el inicio del robot) como O, `base_link` (frame del robot) como $R$. 
+>
 > - $^i\mathbf{p} = (x, y, \theta)^\top$ es la pose del robot (posición + orientación) en el marco de referencia $i$.
 
 Sea $^O\mathbf{p}_k = (x_k, y_k, \theta_k)^\top$ la pose estimada en `odom` al instante $k$. Los desplazamientos $(^R\Delta x, ^R\Delta y, ^R\Delta\theta)$ están expresados en el **frame del robot** (R), por lo que hay que rotar la parte de traslación al frame `odom` antes de integrar. La integración de Euler deja un $^Op_{k+1}$ definido por:
@@ -216,7 +218,7 @@ Esta normalización es esencial: sin ella, pasar de $\theta = \pi - \varepsilon$
 
 La trayectoria conspreestablecida para testear consiste en un cuadrado de 2 metros de lado centrado en el origen. Las esquinas se recorren en sentido antihorario: $(2{,}-2) \to (2{,}2) \to (-2{,}2) \to (-2{,}-2)$. Para cada lado se generan 20 waypoints intermedios equidistantes, totalizando 80 waypoints. La orientación de cada waypoint es "opuesta al centro", es decir $\theta_i = \text{atan2}(y_i, x_i)$, lo que hace que el robot apunte radialmente hacia afuera del cuadrado durante todo el recorrido.
 
-<!--TODO <img src='assets/cuadrado_rviz'> -->
+<img src='assets/trayectoria.png'>
 
 ### Selección de waypoint (Pursuit-Based)
 
@@ -238,10 +240,7 @@ Las ganancias del controlador son parámetros de ROS2 sintonizables sin recompil
 
 ### Experimentación
 
-> #### 1. Selección de $\varepsilon_{\text{pos}}, \varepsilon_\theta$ 
-> TODO:
-
-> #### 2. Selección de $k_{p,*}$ 
+> #### Selección de $k_{p,*}$ 
 > TODO:
 
 ## Localización basada en EKF
@@ -400,11 +399,13 @@ flowchart LR
 ```
 
 ### Experimentación 
-> #### 1. Matplotlib: Comparar poses con ground truth para velocidades constantes.
+
+> #### Base Link vs Base Link EKT vs Base Link GT
 > TODO
 
-> #### 2. RVIZ2: Elipsoide de covarianza en el recorrido.
+> #### RVIZ2: Elipsoide de covarianza en el recorrido.
 > TODO
+
 
 ## Sistema desarrollado
 
