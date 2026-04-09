@@ -107,20 +107,20 @@ Podemos utilizar el desplazamiento de las ruedas medido por los encoders para es
 > - Nombraremos al marco `map` (coordenadas de la simulación) como M, `odom` (desplazamiento desde el inicio del robot) como O, `base_link` (frame del robot) como $R$. 
 > - $^i\mathbf{p} = (x, y, \theta)^\top$ es la pose del robot (posición + orientación) en el marco de referencia $i$.
 
-Sea $^O\mathbf{p}_k = (x_k, y_k, \theta_k)^\top$ la pose estimada en `odom` al instante $k$. Los desplazamientos $(\Delta x_R, \Delta y_R, \Delta\theta)$ están expresados en el **frame del robot** (R), por lo que hay que rotar la parte de traslación al frame `odom` antes de integrar. La integración de Euler deja un $^Op_{k+1}$ definido por:
+Sea $^O\mathbf{p}_k = (x_k, y_k, \theta_k)^\top$ la pose estimada en `odom` al instante $k$. Los desplazamientos $(^R\Delta x, ^R\Delta y, ^R\Delta\theta)$ están expresados en el **frame del robot** (R), por lo que hay que rotar la parte de traslación al frame `odom` antes de integrar. La integración de Euler deja un $^Op_{k+1}$ definido por:
 
-$$^O\mathbf{p}_{k+1} = {}^O\mathbf{p}_k + \begin{bmatrix} \cos\theta_k & -\sin\theta_k & 0 \\ \sin\theta_k & \cos\theta_k & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} \Delta x_R \\ \Delta y_R \\ \Delta\theta \end{bmatrix}$$
+$$^O\mathbf{p}_{k+1} = {}^O\mathbf{p}_k + \begin{bmatrix} \cos\theta_k & -\sin\theta_k & 0 \\ \sin\theta_k & \cos\theta_k & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} ^R\Delta x \\ ^R\Delta y \\ ^R\Delta\theta \end{bmatrix}$$
 
 donde el bloque superior izquierdo $R(\theta_k) = \begin{bmatrix}\cos\theta_k & -\sin\theta_k \\ \sin\theta_k & \cos\theta_k\end{bmatrix}$ rota los desplazamientos de traslación del frame del robot al frame `odom`, y la última fila integra la orientación directamente.
 
-Para calcular $(\Delta x_R, \Delta y_R, \Delta\theta)$, los encoders acumulan ticks absolutos. En cada período se computa el desplazamiento lineal incremental de cada rueda:
+Para calcular $(^R\Delta x, ^R\Delta y, ^R\Delta\theta)$, los encoders acumulan ticks absolutos. En cada período se computa el desplazamiento lineal incremental de cada rueda:
 
 $$\Delta d_i = \Delta\text{ticks}_i \cdot \frac{2\pi r}{500}$$
 
 Como $T^+$ es lineal, la misma relación que mapea velocidades angulares $\omega_i$ a velocidades de la plataforma aplica para desplazamientos pues $\omega_i = \frac{\Delta \phi_i}{\Delta t}$. Basta sustituir $\omega_i \to \Delta\phi_i = \Delta d_i/r$ (desplazamiento angular incremental de cada rueda). 
 Luego, desarrollando $T^+[\Delta\phi_i]$ y cancelando el factor $r$:
 
-$$\begin{bmatrix}\Delta x_R \\ \Delta y_R \\ \Delta\theta\end{bmatrix}
+$$\begin{bmatrix}^R\Delta x \\ ^R\Delta y \\ ^R\Delta\theta\end{bmatrix}
 = T^+\begin{bmatrix}\Delta\phi_{fl} \\ \Delta\phi_{fr} \\ \Delta\phi_{rl} \\ \Delta\phi_{rr}\end{bmatrix}
 = \frac{1}{4}\begin{bmatrix}
 1 & 1 & 1 & 1 \\
