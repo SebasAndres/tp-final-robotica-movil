@@ -136,7 +136,33 @@ La pose $^O\mathbf{p}_k$ se publica como la transformación `odom → base_link`
 ### Experimentación
 
 > #### 1. **Validación de cinemática inversa:** 
-> TODO: Enviar consignas de velocidad constante para cada grado de libertad por separado ($v_x$ puro, $v_y$ puro, $\omega_z$ puro) y comparar las velocidades angulares comandadas a cada rueda contra las velocidades reales reportadas por el simulador.
+> Enviamos consignas de velocidad constante y verificamos que la velocidad de plataforma recuperada por cinemática directa sobre los encoders coincida con la consigna original.
+>
+> La cadena completa es:
+> $$[\hat{v}_x,\, \hat{v}_y,\, \hat{\omega}_z] \xrightarrow{\text{IK}} \hat{\omega}_i \xrightarrow{\text{simulador}} \Delta\text{ticks}_i \xrightarrow{\text{FK}} [v_x',\, v_y',\, \omega_z']$$
+>
+> donde la FK aplica la cinemática directa sobre los desplazamientos angulares de rueda $\omega_i = \Delta\text{ticks}_i \cdot 2\pi / (500\,\Delta t)$. El error de validación es:
+> $$e_{v_x} = \hat{v}_x - v_x', \quad e_{v_y} = \hat{v}_y - v_y', \quad e_{\omega_z} = \hat{\omega}_z - \omega_z'$$
+>
+> En la práctica, $v_x'$, $v_y'$ y $\omega_z'$ ya son publicados por `omni_odometry_node` en `/robot/odometry` (campo `twist`), por lo que basta grabar `/robot/cmd_vel` y `/robot/odometry` para realizar la comparación.
+> 
+> **Reproducibilidad**: 
+> Grabamos los tópicos en una bag con `ros2 bag record /robot/cmd_vel /robot/odometry /robot/encoders -o exp_inverse_k`
+> Ejecutamos el nodo de odometría y enviamos un comando twist a /robot/cmd_vel para que lo procese el nodo. 
+> En particular enviamos `ros2 topic pub /robot/cmd_vel geometry_msgs/msg/Twist "{linear: {x: -0.5, y: -0.5, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}"`
+> Luego comparamos en un notebook la velocidad enviada vs la publicada en odometría.
+> 
+> <img src='assets/cinematica_inversa_plataforma.png' width=600>
+>
+> Los errores cuadráticos medios quedaron:
+> - vx: 0.2424
+> - vy: 0.2426
+> - wz: 0.0061
+> 
+> También comparamos las velocidades angulares de las ruedas:
+> 
+> <img src='assets/cinematica_inversa_ruedas.png' width=600>
+
 
 > #### 2. **Validación de odometría:** 
 > Se movió el robot en trayectorias simples conocidas (traslación pura en X, traslación pura en Y, rotación en el lugar) y se comparó la pose estimada por odometría (`odom → base_link`) contra el ground truth provisto por CoppeliaSim (`odom → base_link_gt`). Como se observa en los videos, la odometría acumula error con la distancia recorrida debido a la integración de Euler y a imperfecciones del modelo.
@@ -237,11 +263,6 @@ Las ganancias del controlador son parámetros de ROS2 sintonizables sin recompil
 | Ganancia longitudinal | $k_{p,x}$ | $1{,}0$ |
 | Ganancia transversal | $k_{p,y}$ | $1{,}0$ |
 | Ganancia angular | $k_{p,\theta}$ | $1{,}0$ |
-
-### Experimentación
-
-> #### Selección de $k_{p,*}$ 
-> TODO:
 
 ## Localización basada en EKF
 
@@ -373,7 +394,7 @@ $K_k \in \mathbb{R}^{3\times2}$ proyecta la innovación bidimensional (rango, be
 
 El sistema completo integra el seguimiento de trayectorias del ítem 2 con la localización por EKF del ítem 3. La única modificación al nodo de seguimiento es la fuente de pose utilizada como feedback: en lugar de la transformación `map → base_link` (odometría pura), se usa `map → base_link_ekf` (pose estimada por el EKF).
 
-Esto se controla en tiempo de compilación mediante la macro `USE_EKF` en [trajectory_pilot.cpp](modelo_omnidireccional/src/trajectory_pilot.cpp):
+Esto se controla en tiempo de compilación mediante la macro `USE_EKF` en [trajectory_pilot.h](modelo_omnidireccional/src/trajectory_pilot.h):
 
 ```cpp
 #if USE_EKF
@@ -400,12 +421,10 @@ flowchart LR
 
 ### Experimentación 
 
-> #### Base Link vs Base Link EKT vs Base Link GT
-> TODO
-
-> #### RVIZ2: Elipsoide de covarianza en el recorrido.
-> TODO
-
+> #### BaseLink, BaseLinkEKT, BaseLinkGT
+> En los experimentos notamos una diferencia importante entre `base_link_ekt` y `base_link_gt` (y `base_link`). 
+> Creemos que se debe a un problema que origina que al comenzar los frames arrancan muy alejados y al mover el robot, diverge aún más:
+> <img src='assets/base_link_ekf_base_link_gt.png'>
 
 ## Sistema desarrollado
 
