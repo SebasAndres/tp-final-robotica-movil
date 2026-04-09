@@ -119,6 +119,9 @@ img {
   text-align: center;
 }
 
+/* ── Video figures ── */
+.video-fallback { display: none; }
+
 /* ── Print ── */
 @media print {
   body {
@@ -139,4 +142,8 @@ img {
 
   /* hide any leftover nav/button elements */
   button, nav { display: none; }
+
+  /* videos: hide player, show link reference */
+  video { display: none; }
+  .video-fallback { display: block !important; }
 }
