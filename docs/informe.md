@@ -242,7 +242,7 @@ Esta normalización es esencial: sin ella, pasar de $\theta = \pi - \varepsilon$
 
 ### Trayectoria cuadrada
 
-La trayectoria conspreestablecida para testear consiste en un cuadrado de 2 metros de lado centrado en el origen. Las esquinas se recorren en sentido antihorario: $(2{,}-2) \to (2{,}2) \to (-2{,}2) \to (-2{,}-2)$. Para cada lado se generan 20 waypoints intermedios equidistantes, totalizando 80 waypoints. La orientación de cada waypoint es "opuesta al centro", es decir $\theta_i = \text{atan2}(y_i, x_i)$, lo que hace que el robot apunte radialmente hacia afuera del cuadrado durante todo el recorrido.
+La trayectoria para testear consiste en un cuadrado de 2 metros de lado centrado en el origen. Las esquinas se recorren en sentido antihorario: $(2{,}-2) \to (2{,}2) \to (-2{,}2) \to (-2{,}-2)$. Para cada lado se generan 20 waypoints intermedios equidistantes, totalizando 80 waypoints. La orientación de cada waypoint es "opuesta al centro", es decir $\theta_i = \text{atan2}(y_i, x_i)$, lo que hace que el robot apunte radialmente hacia afuera del cuadrado durante todo el recorrido.
 
 <img src='assets/trayectoria.png'>
 
@@ -321,7 +321,6 @@ $$Q = \begin{bmatrix} (0{,}05)^2 & 0 & 0 \\ 0 & (0{,}05)^2 & 0 \\ 0 & 0 & (2°\t
 > - $\sigma_x = \sigma_y = 0{,}05\,\text{m}$: el radio de la rueda es $r = 0{,}05\,\text{m}$. Usar $\sigma = r$ por paso de integración refleja que el error de posición ante deslizamiento e imperfecciones del modelo Mecanum es del orden del radio, que es la escala natural de imprecisión cinemática del sistema.
 > - $\sigma_\theta = 2°$: el error angular del modelo Mecanum proviene de las imperfecciones en las velocidades diagonales de las ruedas. $2°$ por paso es un margen conservador sobre la incertidumbre de la integración de Euler de la velocidad angular estimada.
 >
-> Si $Q$ fuera mucho menor, la ganancia de Kalman $K = \Sigma^- H^\top S^{-1}$ sería pequeña y las correcciones del LiDAR apenas afectarían la estimación. Si fuera mucho mayor, la covarianza crecería rápidamente y cualquier detección (incluso ruidosa) produciría correcciones agresivas.
 
 #### Etapa de corrección
 
